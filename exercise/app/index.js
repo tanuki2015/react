@@ -5,6 +5,7 @@ import Spread from './spread';
 import ShowMyName from './ShowMyName';
 import Comment from './Comment';
 import Timer from './components/Timer';
+import Timer101 from '../101Timer';
 
 function App () {
   return (
@@ -15,6 +16,7 @@ function App () {
       <ShowMyName />
       <Comment />
       <Timer />
+      <Timer101 />
     </div>
   );
 }
