@@ -7,10 +7,12 @@ import Comment from './Comment';
 import Timer from './components/Timer';
 import ToggleButton from './toggleButton';
 import TodoApp from './TodoList';
+import Greeting from './components/Greeting'
 
 function App() {
   return (
     <div>
+      <Greeting isLogged={true} />
       <TodoApp />
     </div>
   );
