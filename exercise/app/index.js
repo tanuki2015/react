@@ -5,18 +5,13 @@ import Spread from './spread';
 import ShowMyName from './ShowMyName';
 import Comment from './Comment';
 import Timer from './components/Timer';
-import Timer101 from '../101Timer';
+import ToggleButton from './toggleButton';
+import TodoApp from './TodoList';
 
-function App () {
+function App() {
   return (
     <div>
-      <List />
-      <Spread />
-      <ShowMyName name="neo" />
-      <ShowMyName />
-      <Comment />
-      <Timer />
-      <Timer101 />
+      <TodoApp />
     </div>
   );
 }
