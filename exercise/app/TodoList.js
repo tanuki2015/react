@@ -71,7 +71,7 @@ class TodoApp extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    {/*防止空值，必须放下面，否则preventDefault不起作用，return冒泡到顶层，程序全部退出*/}
+    {/*防止空值，必须放下面，否则preventDefault不起作用，默认提交表单，所有内容都清空，程序全部退出*/}
     if (!this.state.text) {
       return
     }
