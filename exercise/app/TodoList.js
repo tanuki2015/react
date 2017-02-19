@@ -60,7 +60,7 @@ class TodoApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: [{ text: 'the first todo thing' }],
+      items: [],
       text: '',
     };
   }
@@ -71,12 +71,15 @@ class TodoApp extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    {/*防止空值，必须放下面，否则preventDefault不起作用，默认提交表单，所有内容都清空，程序全部退出*/}
+    // 防止空值，必须放下面，否则preventDefault不起作用，默认提交表单，所有内容都清空，程序全部退出
     if (!this.state.text) {
       return
     }
-    {/*只能concat出一个数组，里面放对象，以为要用setState才能更新state，所以不能用arr.push*/}
-    const nextItem = this.state.items.concat([{text: this.state.text}]);
+    // 只能concat出一个数组，里面放对象，以为要用setState才能更新state，所以不能用arr.push
+    // const nextItem = this.state.items.concat([{text: this.state.text}]);
+
+    // 用spread代替concat
+    const nextItem = [...this.state.items, {text: this.state.text}];
     const nextText = '';
     this.setState({items: nextItem, text: nextText});
   }

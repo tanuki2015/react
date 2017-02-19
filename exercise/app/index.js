@@ -12,7 +12,8 @@ import Greeting from './components/Greeting'
 function App() {
   return (
     <div>
-      <Greeting isLogged={true} />
+      {/* 根据jsx语法，isLogged属性默认值为true */}
+      <Greeting isLogged />
       <TodoApp />
     </div>
   );
