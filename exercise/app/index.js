@@ -7,7 +7,8 @@ import Comment from './Comment';
 import Timer from './components/Timer';
 import ToggleButton from './toggleButton';
 import TodoApp from './TodoList';
-import Greeting from './components/Greeting'
+import Greeting from './components/Greeting';
+import Page from './components/Page.js';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       {/* 根据jsx语法，isLogged属性默认值为true */}
       <Greeting isLogged />
       <TodoApp />
+      <Page />
     </div>
   );
 }
