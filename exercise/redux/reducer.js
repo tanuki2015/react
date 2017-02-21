@@ -1,12 +1,13 @@
 // 开始写reducer
 // reducer 是纯函数 (prevState, action) => newState
 
-// 第一次运行时返回这个初始化的state
 import VisibilityFilters from './action.js'
+
+// 第一次运行时返回这个初始化的state
 
 const initialState = {
   visibilityFilter: VisibilityFilters.SHOW_ALL,
-  todo: [],
+  todos: [],
 }
 
 // 返回默认值或处理后的state
