@@ -2,7 +2,7 @@
 
 // 首先要明白，todo中的内容用数组存储，每条item是一个object，包含text（内容）和completed（完成否的标记）属性。
 // 展示如下：
-const todo = [
+const todos = [
   {
     text: 'Build my first Redux app',
     completed: true,
