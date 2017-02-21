@@ -62,6 +62,68 @@ const state = {
 // 具体如何做，全部交由reducer去处理。
 
 /*
-* 写多了action就会发现，我们需要拼好多字符串和对象，于是可以写一个
-* 函数，传入一个字符串，它返回一个构造好格式的action对象，这就是action createor
+* 写多了action就会发现，我们每次需要拼好字符串和对象，于是可以写一个
+* 函数，传入一个字符串，它返回一个构造好格式的action对象，这就是action creator
+* 为上面三个action分别写三个action creator
 */
+
+const addTodo(text) {
+  return {
+    type: 'ADD_TODO',
+    text,
+  }
+}
+
+const toggleTodo(index) {
+  return {
+    type: 'TOGGLE_TODO',
+    index,
+  }
+}
+
+const setVisibilityFilter(filter) {
+  return {
+    type: 'SET_VISIBILITY_FILTER',
+    filter,
+  }
+}
+
+// 这样可以得到action了，后面只需要dispatch给reducer就可以了，下面先写reducer。
+
+// 哦，对了，这样还没完，我们直接把字符串写到了action creator中了，这样的话，以后如果要修改
+// 就修改函数，所以我们用一个常量把他移出来，而且集中管理起来会跟简洁方便
+
+const ADD_TODO = 'ADD_TODO';
+const TOGGLE_TODO = 'TOGGLE_TODO';
+const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER';
+
+// 好了，上面的action creator可以改成下面这样：
+const addTodo(text) {
+  return {
+    type: ADD_TODO,
+    text,
+  }
+}
+
+const toggleTodo(index) {
+  return {
+    type: TOGGLE_TODO,
+    index,
+  }
+}
+
+const setVisibilityFilter(filter) {
+  return {
+    type: SET_VISIBILITY_FILTER,
+    filter,
+  }
+}
+
+// 最后还有setVisibilityFilter中的3个常量
+export const VisibilityFilters = {
+  SHOW_ALL: 'SHOW_ALL',
+  SHOW_COMPLETED: 'SHOW_COMPLETED',
+  SHOW_ACTIVE: 'SHOW_ACTIVE'
+}
+
+// 这样就更官网的示例一样了。
