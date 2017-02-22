@@ -10,6 +10,8 @@ import TodoApp from './TodoList';
 import Greeting from './components/Greeting';
 import Page from './components/Page.js';
 
+import store from '../redux/app/store.js'
+
 function App() {
   return (
     <div>

@@ -74,10 +74,17 @@ function setVisibilityFilter (state = SHOW_ALL, action) {
     return state;
 }
 
-// 3 用一个主reducer合成上面两个子reducer
+// 3 用一个主reducer组合上面两个子reducer
 function todoApp(state = {}, action) {
   return {
     todos: todos(state.todos, action);
     setVisibilityFilter: setVisibilityFilter(state.setVisibilityFilter, action);
   }
 }
+
+// 通过redux提供的combineReducers函数来组合reducers，效果同上
+import { combineReducers } from 'redux';
+const todoApp = combineReducers({
+  todos,
+  setVisibilityFilter,
+});
