@@ -32,7 +32,7 @@ function setVisibilityFilter (state = SHOW_ALL, action) {
     default:
     return state;
   }
-}
+} // 这里少了一个大括号，报错：export应该在顶层...
 
 // 通过redux提供的combineReducers函数来组合reducers
 const todoApp = combineReducers({
