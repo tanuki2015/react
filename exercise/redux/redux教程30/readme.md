@@ -1,0 +1,181 @@
+# redux作者的30个小视频教程笔记
+本打算写在有道云笔记上，但是有道云笔记经常会失去响应几秒，搞得好烦。
+
+## 01 state 树
+再看这个redux教程http://cn.redux.js.org/docs/时候问题特别多，前面对要操作的数据都没有描述清楚，所以很难懂。好不容易看到后面，又被connect卡住，而且代码中的todo.id这个属性前面根本没有，搞得人一头雾水。
+
+我坚信，一个东西如果学不好，那一定是老师没有教好。所以肯定是这个教程有问题。于是找到redux作者的视频，硬着头皮看，原来人家第一课就交代清楚了todo list 的 state数据结构：
+```
+const state = {
+    todos: [{
+        id: 0,
+        text: 'hey',
+        completed: true,
+    },{
+        id: 1,
+        text: 'ho',
+        completed: false,
+    }],
+    visibilityFilter: "SHOW_ACTIVE",
+}
+```
+
+### 简单的counter案例则只需要一个number变量：
+```
+const counter = 0;
+```
+
+### 有多个counter的列表则需要用array：
+```
+const counters = [0, 0];
+```
+
+- mutations 改变
+- cross out 删除
+
+## 02 action对象表示需要改变的state
+
+### 用action描述state
+action中的type是必须的。
+
+### 一个counter仅仅需要INCREMENT，和DECREMENT.
+```
+{
+    type: "INCREMENT"
+}
+// 或者
+{
+    type: "DECREMENT"
+}
+```
+
+### 多个counters 则还需要 ADD_COUNTER， REMOVE_COUNTER
+```
+{
+    type: "ADD_COUNTER",
+}
+// or
+{
+    type: "REMOVE_COUNTER",
+}
+```
+#### 点击每个counter时候，还需要索引，表示哪个counter
+```
+{
+    type: "INCREMENT",
+    index: 1,
+}
+```
+
+### 这种可伸缩的模式适应于中等和复杂的app，组件无需知道具体什么内容被添加，他只需要传递action就可以了。
+
+
+#### 添加todo项的action
+```
+{
+    type: "ADD_COUNTER",
+    text: "hey",
+    id: 3, // 注意，应该是讲错了，这一项应该在reducer中生成
+            // 因为添加内容的时候无需了解自身todo数组中有多少项目
+}
+```
+
+#### toggle todo的时候
+```
+{
+    type: "TOGGLE_TODO",
+    id: 2,
+}
+```
+
+### 设置显示方式得到时候（显示全部？还是已完成？或未完成）
+```
+{
+    type: "SET_VISIBILITY_FILTER",
+    filter: "SHOW_ALL",
+}
+```
+
+总结：
+
+state tree 是只读的，唯一改变state的方式是发送action。action是用原始js对象描述的需要改变的内容。
+
+- scales 缩放
+- medium 中等规模
+- sequential 连续的
+
+## 03 pure function and impure function
+1. 同样参数返回同样结果。
+2. 不能修改传入的参数。（为什么修改参数的时候会有提示，就是这个原因）
+3. 没有外部的的网络请求或数据库update。
+
+- mindful 警觉，留意
+
+## 04 reducer function
+1. 处理state的函数是reducer，它必须是纯函数。他拿到previous state，返回next state。
+2. 虽然全局只有一个state，但大型app中速度也不慢，因为他只修改需要改变的部分，而其他部分则保留不变。（比如修改todolist中的显示方式时候，todolist这个内容数组却不用修改）。
+
+- predictable 可预测
+
+## 05 写一个counter的reducer
+为了在jsbin中支持expect，需要引入  <script src="https://npmcdn.com/expect/umd/expect.min.js"></script>
+
+开始是这样的：
+```
+function counter(state, action) {
+    if (action.type === "ENCREMENT") {
+        return state + 1;
+    } else if (action.type === "DECREMENT") {
+        return state -1;
+    }
+}
+```
+
+如果没有传入state或action中的type无法识别，需要容错：
+```
+function counter(state = 0, action) {
+    if (action.type === "ENCREMENT") {
+        return state + 1;
+    } else if (action.type === "DECREMENT") {
+        return state -1;
+    }
+    return state;
+}
+```
+
+改用箭头函数，并使用switch简化：
+```
+const counter = (state = 0, action) => {
+    switch (action.type) {
+        case "ENCREMENT":
+            return state + 1;
+        case "DECREMENT":
+            return state -1;
+        default:
+            return state;
+    }
+}
+```
+
+
+- convention 约定
+- flaws 裂痕
+- cosmetic 装饰品
+- tweaks 扭
+- cosmetic tweaks 调整，修饰
+- bunch 一串
+
+## 06 Store Methods: getState(), dispatch(), and subscribe()
+ 1. 需要redux提供的createStore方法。
+ 2. createStore包括三个方法：
+     1. getState() 取当前state
+     2. dispatch() 发送action
+     3. subscribe() 订阅事件,返回值是一个函数，用于取消订阅。
+     
+ 
+ 
+ - suffice v. 满足
+ - principles 原则
+ - equivalent 相当于
+ - retrieves 取回，检索
+ - reflect 反映，映射
