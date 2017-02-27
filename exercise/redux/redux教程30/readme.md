@@ -1,6 +1,11 @@
 # redux作者的30个小视频教程笔记
 本打算写在有道云笔记上，但是有道云笔记经常会失去响应几秒，搞得好烦。
 
+写了6章，发现https://github.com/tayiorbeii/egghead.io_redux_course_notes/blob/master/02-Reducer_and_Store.md
+是官方的笔记
+
+这个webpack插件是要的，因为我的html中需要它注入内容：html-webpack-plugingn
+
 ## 01 state 树
 再看这个redux教程http://cn.redux.js.org/docs/时候问题特别多，前面对要操作的数据都没有描述清楚，所以很难懂。好不容易看到后面，又被connect卡住，而且代码中的todo.id这个属性前面根本没有，搞得人一头雾水。
 
@@ -173,6 +178,15 @@ const counter = (state = 0, action) => {
      3. subscribe() 订阅事件,返回值是一个函数，用于取消订阅。
      
  
+ ### 注意： 这里引用redux create方法的时候有问题，运行的时候报错。
+```
+// wrong
+import createStore from 'redux'
+
+// right
+import { createStore } from 'redux'
+
+```
  
  - suffice v. 满足
  - principles 原则
