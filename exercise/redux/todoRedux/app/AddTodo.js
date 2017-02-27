@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 class AddTodo extends React.Component {
     // 不操作state，所以不用constructor，也不用在里面定义state。
@@ -12,9 +11,9 @@ class AddTodo extends React.Component {
         );
     }
 
-    handleClick = (e) => {
-        e.preventDefault();
-        const node = ReactDOM.findDOMNode(this.refs.input);
+    // 把传入的方法自己包一层，规整一下数据和额外处理的逻辑
+    handleClick = () => {
+        const node = this.refs.input;
         const text = node.value.trim();
         this.props.onAddClick(text);
         node.value = '';

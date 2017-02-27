@@ -51,6 +51,7 @@ function todos(state = [], action) {
 
     case TOGGLE_TODO:
     // 通过对象扩展返回新对象，需要stage3的支持
+        // 下面好像多了一个[]
       return [
         state.map((todo, index) => {
           if (action.index === index) {
