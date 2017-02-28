@@ -193,3 +193,36 @@ import { createStore } from 'redux'
  - equivalent 相当于
  - retrieves 取回，检索
  - reflect 反映，映射
+ 
+ ## 07 避免修改原数组的更新操作
+ 比如数组中某项加一：
+ 
+ 文章中的方法是用slice和spread操作：
+ 1. 取出并展开index之前的内容。
+ 2. 取出index这一项的内容并改变。
+ 3. 取出并展开index之后的内容。
+```
+// index 是需要修改的数组索引
+newArr = [
+    ...arr.slice(0,index),
+    arr.[index] + 1,
+    ...arr.slice(inde+1)
+    ]
+```
+
+减一的操作：
+```
+newArr = [
+    ...arr.slice(0,index),
+    ...arr.slice(inde+1)
+]
+```
+
+这种操作一多，效率就不好了，可以引入react的update。
+`import update from 'react-addons-update';`
+
+上面的加一和减一操作如下：
+```
+
+```
+
