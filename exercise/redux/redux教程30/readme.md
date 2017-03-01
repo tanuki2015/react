@@ -219,10 +219,22 @@ newArr = [
 ```
 
 这种操作一多，效率就不好了，可以引入react的update。
-`import update from 'react-addons-update';`
+```
+npm install --save immutability-helper;
 
+import update from 'immutability-helper';
+
+```
 上面的加一和减一操作如下：
 ```
+const todos = [1,2,3,4];
+// 添加
+const newtodos = update(todos, {$push: [5]});
+
+// 修改或删除
+const deltodos = update(todos, {$splice: [[1,1]]});
 
 ```
 
+## 08 对象的no mutation操作
+使用es7的spread
