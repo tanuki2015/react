@@ -1,7 +1,6 @@
 import update from 'immutability-helper';
 import {expect, assert} from 'chai';
 
-
 const todos = [1,2,3,4];
 // 添加
 const newtodos = update(todos, {$push: [5]});

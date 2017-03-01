@@ -236,5 +236,10 @@ const deltodos = update(todos, {$splice: [[1,1]]});
 
 ```
 
+测试方面，chai的expect无法比较数组，于是利用expect这个模块来测试
+
+在探索了immutable.js后，还是觉得尽量用原生的方式来操作state比较好，
+虽然啰嗦了写，可是immutable太多的语法糖不容易消化，用法容易与原生搞混，也麻烦。
+
 ## 08 对象的no mutation操作
 使用es7的spread
