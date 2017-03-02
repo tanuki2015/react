@@ -248,3 +248,13 @@ const deltodos = update(todos, {$splice: [[1,1]]});
 
 ## 08 对象的no mutation操作
 使用es7的spread
+
+- flip 轻弹， （点击切换）
+- assign 分配
+- corresponds 一致，符合
+- despite 不管
+- proposed 推荐
+- recap 扼要重述
+- representing 代表
+- intended 故意， 预期的
+- equality 等式
