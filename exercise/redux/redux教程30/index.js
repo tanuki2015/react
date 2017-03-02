@@ -6,4 +6,6 @@
 // import immutableObject from './08.immutableObject';
 // import addTodos from './09addTodo';
 // import toggleTodo from  './10.toggleTodo';
-import  composeReducer from './11.compose reducer';
+// import  composeReducer from './11.compose reducer';
+// import composeObject from './12composeWithObject';
+import composeObject from './12composeWithObject';
