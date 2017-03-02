@@ -251,6 +251,9 @@ const deltodos = update(todos, {$splice: [[1,1]]});
 
 - flip 轻弹， （点击切换）
 - assign 分配
+
+## 09 添加todo项的reducer
+
 - corresponds 一致，符合
 - despite 不管
 - proposed 推荐
@@ -258,3 +261,5 @@ const deltodos = update(todos, {$splice: [[1,1]]});
 - representing 代表
 - intended 故意， 预期的
 - equality 等式
+
+## 10 toggleTodo
