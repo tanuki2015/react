@@ -263,3 +263,18 @@ const deltodos = update(todos, {$splice: [[1,1]]});
 - equality 等式
 
 ## 10 toggleTodo
+
+- matter adj.重要
+- precaution 警告
+- inverted 反转
+
+## 11 compose reducer
+
+为了保持root reducer的整洁，把具体操作分离出来，
+这样root reducer 就很容易保持简洁。
+
+- concerns 关注点
+- As a matter of convention根据惯例
+- delegate 委派
+- abstract 抽象
+
