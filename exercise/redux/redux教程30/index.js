@@ -8,4 +8,5 @@
 // import toggleTodo from  './10.toggleTodo';
 // import  composeReducer from './11.compose reducer';
 // import composeObject from './12composeWithObject';
-import composeObject from './12composeWithObject';
+// import composeObject from './12composeWithObject';
+import countReactRedux from './06.3counterWithReact-Redux';
