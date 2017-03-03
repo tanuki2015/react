@@ -278,3 +278,23 @@ const deltodos = update(todos, {$splice: [[1,1]]});
 - delegate 委派
 - abstract 抽象
 
+## 14 react todos
+### ref的回调用法
+以前用ref的字符串，通过this.refs.name来引用dom节点。
+
+当dom节点是input的时候还需要些handle函数。
+
+而现在用ref的回调函数，直接能拿到值。
+```
+<input type="text" ref={node => this.input = node}/>
+                <button onClick={()=>{
+                        store.dispatch({
+                            type: 'ADD_TODO',
+                            id: nextTodoId++,
+                            text: this.input.value,
+                        });
+                        this.input.value = '';
+                    }}>Add#
+                </button>
+
+```
