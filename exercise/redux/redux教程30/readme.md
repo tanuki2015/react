@@ -298,3 +298,118 @@ const deltodos = update(todos, {$splice: [[1,1]]});
                 </button>
 
 ```
+
+## 15 setVisibity
+为了根据visibity的filter来显示不同的内容，需要做下面几件事情：
+1. 需要一个FilterLink组件显示链接
+```
+.
+. // Reducer code, etc.
+.
+// 注意传入的是一个对象，其实是props对象，用结构赋值取值，所以可以用在函数内部
+const FilterLink = ({filter, children}) => {
+    return (
+        <a href="#"
+            onClick={(e)=>{
+                e.preventDefault();
+                store.dispatch({
+                    type: 'SET_VISIBILITY_FILTER',
+                    filter,
+                });
+            }}
+        >
+            {children}
+        </a>
+    )
+};
+.
+.
+.
+
+```
+
+2. 在todoApp中render
+```
+.
+. // TodoApp component stuff including the the <ul> of todo items...
+. // This <p> tag is to be rendered below the list.
+<p>
+  Show:
+  {' '}
+  <FilterLink
+    filter='SHOW_ALL'
+  >
+    All
+  </FilterLink>
+  {' '}
+  <FilterLink
+    filter='SHOW_ACTIVE'
+  >
+    Active
+  </FilterLink>
+  {' '}
+  <FilterLink
+    filter='SHOW_COMPLETED'
+  >
+    Completed
+  </FilterLink>
+</p>
+.
+. // close the containing `<div>` and the TodoComponent
+.
+```
+
+3. 需要一个getVisibleTodos函数来根据filter过滤todos数组，然后再todoApp中调用后得到需要显示的数组。
+```
+const getVisibleTodos = (todos, filter) => {
+    switch (filter) {
+        case 'SHOW_ALL':
+            return todos;
+        case 'SHOW_ACTIVE':
+            return todos.filter(item => !item.completed);
+        case 'SHOW_COMPLETED':
+            return todos.filter(item => item.completed);
+    }
+};
+
+```
+
+4. 在todoApp组件中调用
+```
+// 调用getVisibleTodos函数，过滤需要显示的todos数组
+// 需要用到的todos数组和visibilityFilter字符串在render TodoApp组件的时候传入
+const visibleTodos = getVisibleTodos(this.props.todos, this.props.visibilityFilter);
+.
+.
+.
+<ul>
+                    {visibleTodos.map(todo =>
+                        <li key={todo.id}
+                            onClick={()=>{
+                                store.dispatch({
+                                    type: 'TOGGLE_TODO',
+                                    id: todo.id,
+                                })
+                            }}
+                            style={{textDecoration: todo.completed? 'line-through': 'none'}}
+                        >{todo.text}
+                        </li>
+                    )}
+                </ul>
+
+```
+
+5. 在render todoApp的时候传入参数
+```
+const render = () => {
+    ReactDom.render(
+        // 把state中的todos数组和setVisibilityFilter作为props传入组件
+        <TodoApp {...store.getState()} />,
+        document.querySelector('#app')
+    );
+};
+```
+
+6. 让连接显示不同的样子，以示区别
+
+

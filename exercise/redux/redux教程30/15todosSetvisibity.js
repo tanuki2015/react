@@ -73,9 +73,12 @@ const getVisibleTodos = (todos, filter) => {
 let nextTodoId = 0;
 class TodoApp extends React.Component {
     render() {
+        // 3 因为后面要用到todos和visibilityFilter,所以先提取出来
+        const {todos, visibilityFilter} = this.props;
+
         // 调用getVisibleTodos函数，过滤需要显示的todos数组
         // 需要用到的todos数组和visibilityFilter字符串在render TodoApp组件的时候传入
-        const visibleTodos = getVisibleTodos(this.props.todos, this.props.visibilityFilter);
+        const visibleTodos = getVisibleTodos(todos, visibilityFilter);
         return (
             <div>
                 <input type="text" ref={node => this.input = node}/>
@@ -105,15 +108,24 @@ class TodoApp extends React.Component {
                 <p>
                     Show:
                     {' '}
-                    <FilterLink filter="SHOW_ALL">
+                    <FilterLink
+                        filter="SHOW_ALL"
+                        currentFilter = {visibilityFilter}
+                    >
                         All
                     </FilterLink>
                     {' '}
-                    <FilterLink filter="SHOW_ACTIVE">
+                    <FilterLink
+                        filter="SHOW_ACTIVE"
+                        currentFilter = {visibilityFilter}
+                    >
                         Active
                     </FilterLink>
                     {' '}
-                    <FilterLink filter="SHOW_COMPLETED">
+                    <FilterLink
+                        filter="SHOW_COMPLETED"
+                        currentFilter = {visibilityFilter}
+                    >
                         Completed
                     </FilterLink>
                 </p>
@@ -124,7 +136,11 @@ class TodoApp extends React.Component {
 
 // 1 添加react组件,呈现link
 // 注意传入的是一个对象，其实是props对象，用结构赋值取值，所以可以用在函数内部
-const FilterLink = ({filter, children}) => {
+const FilterLink = ({filter, children, currentFilter}) => {
+    // 4 如果当前链接的filter等于传入的filter，则不用发action，仅仅返回一个文本表示当前的状态
+    if (filter === currentFilter) {
+        return <span>{children}</span>
+    }
     return (
         <a href="#"
             onClick={(e)=>{
