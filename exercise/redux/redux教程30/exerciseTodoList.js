@@ -79,10 +79,39 @@ class TodoApp extends React.Component {
                         style={{textDecoration: todo.completed? 'line-through': 'none'}}
                     >{todo.text}</li>) }
                 </ul>
+                <p>
+                    SHOW:
+                    {' '}
+                    <FilterLink filter="SHOW_ALL">
+                        ALL
+                    </FilterLink>
+                    {' '}
+                    <FilterLink filter="SHOW_ACTIVE">
+                        ACTIVE
+                    </FilterLink>
+                    {' '}
+                    <FilterLink filter="SHOW_COMPLETED">
+                        COMPLETED
+                    </FilterLink>
+
+                </p>
             </div>
         )
     }
 }
+
+// create filterLink component, todoApp会用到
+const FilterLink = ({filter, children}) => {
+    return (
+        <a href="#"
+            onClick={()=>{
+                store.dispatch({type: 'SET_VISIBILITY_FILTER', filter});
+            }}
+        >
+            {children}
+        </a>
+    )
+};
 
 // create store
 const store = createStore(rootReducer);
