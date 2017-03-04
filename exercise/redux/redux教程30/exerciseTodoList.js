@@ -59,10 +59,25 @@ const rootReducer = combineReducers({
     setVisibilityFilter,
 });
 
+// 为了展示符合filter link的项目，先做一个数组过滤，把满足条件的直接传递给todoApp
+
+const getVisibleTodos = (todos, filter) => {
+    switch (filter) {
+        case 'SHOW_ALL':
+            return todos;
+        case 'SHOW_ACTIVE':
+            return todos.filter(item => !item.completed);
+        case 'SHOW_COMPLETED':
+            return todos.filter(item => item.completed);
+    }
+};
 // create todoApp component
 let todoId = 0;
 class TodoApp extends React.Component {
     render() {
+        // 这里解构赋值的名字写错了，搞了一个多小时...
+        const {todos, setVisibilityFilter} = this.props;
+        const visibleTodos = getVisibleTodos(todos, setVisibilityFilter);
         return (
             <div>
                 <input type="text" ref={(node) => {this.input = node}} />
@@ -71,12 +86,13 @@ class TodoApp extends React.Component {
                     this.input.value = '';
                 }}>ADD</button>
                 <ul>
-                    { this.props.todos.map(todo => <li
-                        key={todo.id}
-                        onClick={()=>{
-                            store.dispatch({type: 'TOGGLE_TODO', id: todo.id});
-                        }}
-                        style={{textDecoration: todo.completed? 'line-through': 'none'}}
+                    { visibleTodos.map(todo =>
+                        <li
+                            key={todo.id}
+                            onClick={()=>{
+                                store.dispatch({type: 'TOGGLE_TODO', id: todo.id});
+                            }}
+                            style={{textDecoration: todo.completed? 'line-through': 'none'}}
                     >{todo.text}</li>) }
                 </ul>
                 <p>
@@ -104,7 +120,8 @@ class TodoApp extends React.Component {
 const FilterLink = ({filter, children}) => {
     return (
         <a href="#"
-            onClick={()=>{
+            onClick={(e)=>{
+                e.preventDefault();
                 store.dispatch({type: 'SET_VISIBILITY_FILTER', filter});
             }}
         >
@@ -118,7 +135,7 @@ const store = createStore(rootReducer);
 
 const render = () => {
     ReactDom.render(
-        <TodoApp todos={store.getState().todos} />,
+        <TodoApp {...store.getState()} />,
         document.querySelector('#app')
     )
 };
