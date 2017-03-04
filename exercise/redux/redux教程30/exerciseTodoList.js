@@ -60,16 +60,35 @@ const rootReducer = combineReducers({
 });
 
 // create todoApp component
-
+let todoId = 0;
+class TodoApp extends React.Component {
+    render() {
+        return (
+            <div>
+                <input type="text"/>
+                <button onClick={()=>{
+                    store.dispatch({type: 'ADD_TODO', id: todoId++, text: 'wohahaha'})
+                }}>ADD</button>
+                <ul>
+                    { this.props.todos.map(todo => <li key={todo.id}>{todo.text}</li>) }
+                </ul>
+            </div>
+        )
+    }
+}
 
 // create store
 const store = createStore(rootReducer);
 
 const render = () => {
     ReactDom.render(
-
+        <TodoApp todos={store.getState().todos} />,
+        document.querySelector('#app')
     )
-}
+};
+
+store.subscribe(render);
+render();
 
 // 下面是test...
 const testAddTodo = () => {
