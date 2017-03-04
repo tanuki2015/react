@@ -65,12 +65,19 @@ class TodoApp extends React.Component {
     render() {
         return (
             <div>
-                <input type="text"/>
+                <input type="text" ref={(node) => {this.input = node}} />
                 <button onClick={()=>{
-                    store.dispatch({type: 'ADD_TODO', id: todoId++, text: 'wohahaha'})
+                    store.dispatch({type: 'ADD_TODO', id: todoId++, text: this.input.value});
+                    this.input.value = '';
                 }}>ADD</button>
                 <ul>
-                    { this.props.todos.map(todo => <li key={todo.id}>{todo.text}</li>) }
+                    { this.props.todos.map(todo => <li
+                        key={todo.id}
+                        onClick={()=>{
+                            store.dispatch({type: 'TOGGLE_TODO', id: todo.id});
+                        }}
+                        style={{textDecoration: todo.completed? 'line-through': 'none'}}
+                    >{todo.text}</li>) }
                 </ul>
             </div>
         )
