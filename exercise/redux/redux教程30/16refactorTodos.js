@@ -63,14 +63,41 @@ const rootReducer = combineReducers({
 
 const getVisibleTodos = (todos, filter) => {
     switch (filter) {
+        case 'SHOW_ALL':
+            return todos;
         case 'SHOW_ACTIVE':
             return todos.filter(item => !item.completed);
         case 'SHOW_COMPLETED':
             return todos.filter(item => item.completed);
-        default :
-            return todos;
     }
 };
+
+// extract todoApp div-ul-li
+// 1. 去掉key，在上级list那一级调用的时候制定
+// 2. 需要的参数全部默认从this.props传入，通过解构赋值拿到
+const ListItem = ({text, onClick, completed}) => {
+    return (
+        <li
+            onClick={onClick}
+            style={{textDecoration: completed ? 'line-through' : 'none'}}
+        >{text}</li>)
+};
+
+// extract todoApp div-ul
+const List = ({todos, onListItemClick}) => {
+    return (
+        <ul>
+            {todos.map(todo => (
+                <ListItem
+                    {...todo}
+                    key={todo.id}
+                    onClick={() => {onListItemClick(todo.id)}}
+                />
+            ))}
+        </ul>
+    )
+};
+
 // create todoApp component
 let todoId = 0;
 class TodoApp extends React.Component {
@@ -85,16 +112,13 @@ class TodoApp extends React.Component {
                     store.dispatch({type: 'ADD_TODO', id: todoId++, text: this.input.value});
                     this.input.value = '';
                 }}>ADD</button>
-                <ul>
-                    { visibleTodos.map(todo =>
-                        <li
-                            key={todo.id}
-                            onClick={()=>{
-                                store.dispatch({type: 'TOGGLE_TODO', id: todo.id});
-                            }}
-                            style={{textDecoration: todo.completed? 'line-through': 'none'}}
-                    >{todo.text}</li>) }
-                </ul>
+
+                <List
+                  todos={visibleTodos}
+                  onListItemClick={id => {
+                      store.dispatch({type: 'TOGGLE_TODO', id});
+                  }}
+                />
                 <p>
                     SHOW:
                     {' '}
@@ -132,10 +156,10 @@ const FilterLink = ({filter, children, currentFilter}) => {
     }
     return (
         <a href="#"
-            onClick={(e)=>{
-                e.preventDefault();
-                store.dispatch({type: 'SET_VISIBILITY_FILTER', filter});
-            }}
+           onClick={(e)=>{
+               e.preventDefault();
+               store.dispatch({type: 'SET_VISIBILITY_FILTER', filter});
+           }}
         >
             {children}
         </a>

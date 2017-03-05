@@ -412,4 +412,57 @@ const render = () => {
 
 6. 让连接显示不同的样子，以示区别
 
+通过渲染一个纯span来展示
 
+## 16 提取展示型组件
+
+### todoItem
+```
+// extract todoApp div-ul-li
+// 1. 去掉key，在上级list那一级调用的时候制定
+// 2. 需要的参数全部默认从this.props传入，通过解构赋值拿到
+const listItem = ({text, onClick, completed}) => {
+    return (
+        <li
+            onClick={onClick}
+            style={{textDecoration: completed ? 'line-through' : 'none'}}
+        >{text}</li>)
+};
+
+
+// extract todoApp div-ul
+const List = ({todos, onListItemClick}) => {
+    return (
+        <ul>
+            {todos.map(todo => (
+                <ListItem
+                    {...todo}
+                    key={todo.id}
+                    onClick={() => {onListItemClick(todo.id)}}
+                />
+            ))}
+        </ul>
+    )
+};
+
+// 在todoApp中调用
+.
+.
+                <List
+                  todos={visibleTodos}
+                  onListItemClick={id => {
+                      store.dispatch({type: 'TOGGLE_TODO', id});
+                  }}
+                />
+.
+.
+```
+
+这个item中onClick函数的传递有点绕：
+
+1. 本来写在item中的handleClick改成上级（list）传入。
+2. 在list中调用listItem时候，给item传入了一个函数，这个函数的作用是，拼出一个函数在item中执行。
+因为item需要的操作（onClick函数）在todoApp定义，而需要的参数todo.id却在list中定义，所以需要在list中拼好，然后传给item。
+
+
+### todoList

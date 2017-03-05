@@ -11,4 +11,7 @@
 // import composeObject from './12composeWithObject';
 // import countReactRedux from './06.3counterWithReact-Redux';
 // import reactTodos from './14reactTodos';
-import todoSetvisibility from './15todosSetvisibity';
+// import todoSetvisibility from './15todosSetvisibity';
+import refactorTodos from './16refactorTodos'
+
+// import excrcise from './exerciseTodoList';
