@@ -89,11 +89,13 @@ class TodoApp extends React.Component {
                     { visibleTodos.map(todo =>
                         <li
                             key={todo.id}
-                            onClick={()=>{
+                            onClick={() => {
                                 store.dispatch({type: 'TOGGLE_TODO', id: todo.id});
                             }}
-                            style={{textDecoration: todo.completed? 'line-through': 'none'}}
-                    >{todo.text}</li>) }
+                            style={{textDecoration: todo.completed ? 'line-through' : 'none'}}
+                        >
+                            {todo.text}
+                        </li>) }
                 </ul>
                 <p>
                     SHOW:

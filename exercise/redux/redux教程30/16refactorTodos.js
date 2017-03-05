@@ -80,7 +80,9 @@ const ListItem = ({text, onClick, completed}) => {
         <li
             onClick={onClick}
             style={{textDecoration: completed ? 'line-through' : 'none'}}
-        >{text}</li>)
+        >
+            {text}
+        </li>)
 };
 
 // extract todoApp div-ul
@@ -98,6 +100,21 @@ const List = ({todos, onListItemClick}) => {
     )
 };
 
+// extract addTodo div-input, button
+
+const Addtodo = ({onAddClick}) => {
+    let input;
+    return (
+        <div>
+            <input type="text" ref={(node) => {input = node}} />
+            <button onClick={()=>{
+                onAddClick(input.value);
+                input.value = '';
+            }}>ADD</button>
+        </div>
+    )
+};
+
 // create todoApp component
 let todoId = 0;
 class TodoApp extends React.Component {
@@ -107,11 +124,15 @@ class TodoApp extends React.Component {
         const visibleTodos = getVisibleTodos(todos, setVisibilityFilter);
         return (
             <div>
-                <input type="text" ref={(node) => {this.input = node}} />
-                <button onClick={()=>{
-                    store.dispatch({type: 'ADD_TODO', id: todoId++, text: this.input.value});
-                    this.input.value = '';
-                }}>ADD</button>
+                <Addtodo
+                    onAddClick={text =>
+                        store.dispatch({
+                            type: 'ADD_TODO',
+                            id: todoId++,
+                            text
+                        })
+                    }
+                />
 
                 <List
                   todos={visibleTodos}
