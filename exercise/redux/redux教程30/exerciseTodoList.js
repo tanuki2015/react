@@ -98,15 +98,24 @@ class TodoApp extends React.Component {
                 <p>
                     SHOW:
                     {' '}
-                    <FilterLink filter="SHOW_ALL">
+                    <FilterLink
+                        filter="SHOW_ALL"
+                        currentFilter={setVisibilityFilter}
+                    >
                         ALL
                     </FilterLink>
                     {' '}
-                    <FilterLink filter="SHOW_ACTIVE">
+                    <FilterLink
+                        filter="SHOW_ACTIVE"
+                        currentFilter={setVisibilityFilter}
+                    >
                         ACTIVE
                     </FilterLink>
                     {' '}
-                    <FilterLink filter="SHOW_COMPLETED">
+                    <FilterLink
+                        filter="SHOW_COMPLETED"
+                        currentFilter={setVisibilityFilter}
+                    >
                         COMPLETED
                     </FilterLink>
 
@@ -117,7 +126,10 @@ class TodoApp extends React.Component {
 }
 
 // create filterLink component, todoApp会用到
-const FilterLink = ({filter, children}) => {
+const FilterLink = ({filter, children, currentFilter}) => {
+    if (currentFilter === filter) {
+        return <span>{children}</span>
+    }
     return (
         <a href="#"
             onClick={(e)=>{
