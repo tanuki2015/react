@@ -465,4 +465,44 @@ const List = ({todos, onListItemClick}) => {
 因为item需要的操作（onClick函数）在todoApp定义，而需要的参数todo.id却在list中定义，所以需要在list中拼好，然后传给item。
 
 
+后来想了一下，其实也不难理解，比如上面的函数在3个层级中传递：
+
+1. 在顶级component中写的函数，自然可以拿到此context中定义的各种数据，比如：store.dispatch方法，然后传给中间级。
+
+```  onListItemClick={id => {
+                      store.dispatch({type: 'TOGGLE_TODO', id});
+                  }}
+```                  
+2. 在中间级component中通过props拿到后，可以把中间级context的数据传入，比如todo.id.
+唯一需要注意的是，这个id的借口在上级要定好。
+```
+                    onClick={() => {onListItemClick(todo.id)}}
+```
+3. 在最下级的component中则直接交给响应事件调用就行了
+```
+            onClick={onClick}
+```
+
+后来又想了下：
+
+- 其实就是在顶层component中定义了一个函数，通过props传递给了下层component。
+- 下层component可以拿来直接运行，也可以传给下下层component。当然，也可以在传递前包一层，把这一层的数据
+当做参数传给此函数。
+- 最底层直接拿来运行就行了。
+
+这么做的好处是：
+1. 最底层component的行为被解耦，成为纯粹的 presentational components。
+2. 中间一层也只是包装一下，传递一下需要的数据给函数，也可以是 presentational components。
+3. 顶层component则是 container component，负责定义行为（函数），而不用呈现view。
+
+#### 传递函数的命名规范。
+根据观察，命名的规律是这样的：
+最上层以onClickXXX，比如onClickListItem命名，表示这个onClick实在listItem上触发：
+`<todoApp onClickListItem={(x)=>{xxx...}}/>`
+中间层显然用onClickListItem来接收，以onClick传递到最后一层，因为最后一层的环境就表示了这个函数的context，
+而其它层次需要明示来提醒，表示是在哪里要执行的函数。
+
 ### todoList
+略，同listItem类似。
+
+### Extracting Presentational Components (AddTodo, Footer, FilterLink）

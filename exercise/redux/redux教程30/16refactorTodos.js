@@ -56,7 +56,7 @@ const setVisibilityFilter = (state = 'SHOW_ALL', action) => {
 // combineReducers
 const rootReducer = combineReducers({
     todos,
-    setVisibilityFilter,
+    visibilityFilter: setVisibilityFilter,
 });
 
 // 为了展示符合filter link的项目，先做一个数组过滤，把满足条件的直接传递给todoApp
@@ -72,7 +72,7 @@ const getVisibleTodos = (todos, filter) => {
     }
 };
 
-// extract todoApp div-ul-li
+// extract todoApp div-ul-li(相对于提取之前的内容，见15todosSetvisibity.js)
 // 1. 去掉key，在上级list那一级调用的时候制定
 // 2. 需要的参数全部默认从this.props传入，通过解构赋值拿到
 const ListItem = ({text, onClick, completed}) => {
@@ -115,13 +115,47 @@ const Addtodo = ({onAddClick}) => {
     )
 };
 
+// extract Footer div-p
+const Footer = ({visibilityFilter, onClickLink}) => {
+    return (
+        <p>
+            SHOW
+            {': '}
+            <FilterLink
+                filter="SHOW_ALL"
+                currentFilter={visibilityFilter}
+                onClick = {onClickLink}
+            >
+                ALL
+            </FilterLink>
+            {', '}
+            <FilterLink
+                filter="SHOW_ACTIVE"
+                currentFilter={visibilityFilter}
+                onClick = {onClickLink}
+            >
+                ACTIVE
+            </FilterLink>
+            {', '}
+            <FilterLink
+                filter="SHOW_COMPLETED"
+                currentFilter={visibilityFilter}
+                onClick = {onClickLink}
+            >
+                COMPLETED
+            </FilterLink>
+
+        </p>
+    )
+};
+
 // create todoApp component
 let todoId = 0;
 class TodoApp extends React.Component {
     render() {
         // 这里解构赋值的名字写错了，搞了一个多小时...
-        const {todos, setVisibilityFilter} = this.props;
-        const visibleTodos = getVisibleTodos(todos, setVisibilityFilter);
+        const {todos, visibilityFilter} = this.props;
+        const visibleTodos = getVisibleTodos(todos, visibilityFilter);
         return (
             <div>
                 <Addtodo
@@ -140,38 +174,20 @@ class TodoApp extends React.Component {
                       store.dispatch({type: 'TOGGLE_TODO', id});
                   }}
                 />
-                <p>
-                    SHOW:
-                    {' '}
-                    <FilterLink
-                        filter="SHOW_ALL"
-                        currentFilter={setVisibilityFilter}
-                    >
-                        ALL
-                    </FilterLink>
-                    {' '}
-                    <FilterLink
-                        filter="SHOW_ACTIVE"
-                        currentFilter={setVisibilityFilter}
-                    >
-                        ACTIVE
-                    </FilterLink>
-                    {' '}
-                    <FilterLink
-                        filter="SHOW_COMPLETED"
-                        currentFilter={setVisibilityFilter}
-                    >
-                        COMPLETED
-                    </FilterLink>
 
-                </p>
+                <Footer
+                    visibilityFilter= {visibilityFilter}
+                    onClickLink = {(filter) => {
+                        store.dispatch({type: 'SET_VISIBILITY_FILTER', filter});
+                    }}
+                />
             </div>
         )
     }
 }
 
 // create filterLink component, todoApp会用到
-const FilterLink = ({filter, children, currentFilter}) => {
+const FilterLink = ({filter, children, currentFilter, onClick}) => {
     if (currentFilter === filter) {
         return <span>{children}</span>
     }
@@ -179,7 +195,7 @@ const FilterLink = ({filter, children, currentFilter}) => {
         <a href="#"
            onClick={(e)=>{
                e.preventDefault();
-               store.dispatch({type: 'SET_VISIBILITY_FILTER', filter});
+               onClick(filter);
            }}
         >
             {children}
