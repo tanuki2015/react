@@ -151,40 +151,37 @@ const Footer = ({visibilityFilter, onClickLink}) => {
 
 // create todoApp component
 let todoId = 0;
-class TodoApp extends React.Component {
-    render() {
-        // 这里解构赋值的名字写错了，搞了一个多小时...
-        const {todos, visibilityFilter} = this.props;
-        const visibleTodos = getVisibleTodos(todos, visibilityFilter);
-        return (
-            <div>
-                <Addtodo
-                    onAddClick={text =>
-                        store.dispatch({
-                            type: 'ADD_TODO',
-                            id: todoId++,
-                            text
-                        })
-                    }
-                />
+const TodoApp = ({todos, visibilityFilter}) =>{
+    // 这里解构赋值的名字写错了，搞了一个多小时...
+    const visibleTodos = getVisibleTodos(todos, visibilityFilter);
+    return (
+        <div>
+            <Addtodo
+                onAddClick={text =>
+                    store.dispatch({
+                        type: 'ADD_TODO',
+                        id: todoId++,
+                        text
+                    })
+                }
+            />
 
-                <List
-                  todos={visibleTodos}
-                  onListItemClick={id => {
-                      store.dispatch({type: 'TOGGLE_TODO', id});
-                  }}
-                />
+            <List
+                todos={visibleTodos}
+                onListItemClick={id => {
+                    store.dispatch({type: 'TOGGLE_TODO', id});
+                }}
+            />
 
-                <Footer
-                    visibilityFilter= {visibilityFilter}
-                    onClickLink = {(filter) => {
-                        store.dispatch({type: 'SET_VISIBILITY_FILTER', filter});
-                    }}
-                />
-            </div>
-        )
-    }
-}
+            <Footer
+                visibilityFilter= {visibilityFilter}
+                onClickLink = {(filter) => {
+                    store.dispatch({type: 'SET_VISIBILITY_FILTER', filter});
+                }}
+            />
+        </div>
+    )
+};
 
 // create filterLink component, todoApp会用到
 const FilterLink = ({filter, children, currentFilter, onClick}) => {
