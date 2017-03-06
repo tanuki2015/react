@@ -101,13 +101,17 @@ const List = ({todos, onListItemClick}) => {
 
 // extract addTodo div-input, button
 
-const Addtodo = ({onAddClick}) => {
+const Addtodo = () => {
     let input;
     return (
         <div>
             <input type="text" ref={(node) => {input = node}} />
             <button onClick={()=>{
-                onAddClick(input.value);
+                store.dispatch({
+                    type: 'ADD_TODO',
+                    id: todoId++,
+                    text: input.value
+                });
                 input.value = '';
             }}>ADD</button>
         </div>
@@ -142,31 +146,40 @@ const Footer = ({visibilityFilter, onClickLink}) => {
     )
 };
 
-// create todoApp component
-let todoId = 0;
-const TodoApp = ({todos, visibilityFilter}) =>{
-    // 这里解构赋值的名字写错了，搞了一个多小时...
-    const visibleTodos = getVisibleTodos(todos, visibilityFilter);
-    return (
-        <div>
-            <Addtodo
-                onAddClick={text =>
-                    store.dispatch({
-                        type: 'ADD_TODO',
-                        id: todoId++,
-                        text
-                    })
-                }
-            />
+// 增加一个中间组件，连接redux和listTodo组件
+class VisibleTodoList extends React.Component {
+    componentDidMount() {
+        this.unSubscribe = store.subscribe(() => this.forceUpdate())
+    }
 
+    componentWillUnmount() {
+        this.unSubscribe();
+    }
+    render() {
+        const props = this.props;
+        const state = store.getState();
+        const visibleTodos = getVisibleTodos(state.todos, state.visibilityFilter);
+        return (
             <List
                 todos={visibleTodos}
                 onListItemClick={id => {
                     store.dispatch({type: 'TOGGLE_TODO', id});
                 }}
             />
+        )
+    }
+}
 
-            <Footer/>
+// create todoApp component
+let todoId = 0;
+const TodoApp = () =>{
+    return (
+        <div>
+            <Addtodo />
+
+            <VisibleTodoList/>
+
+            <Footer />
         </div>
     )
 };
@@ -224,15 +237,20 @@ const Link = ({active, children, onClick}) => {
 // create store
 const store = createStore(rootReducer);
 
-const render = () => {
-    ReactDom.render(
-        <TodoApp {...store.getState()} />,
-        document.querySelector('#app')
-    )
-};
+// 因为重构后的TodoApp中的子组件都能够自己订阅state的事件，所以TodoApp只需要render一次就行了
+// const render = () => {
+//     ReactDom.render(
+//         <TodoApp {...store.getState()} />,
+//         document.querySelector('#app')
+//     )
+// };
+// store.subscribe(render);
+// render();
 
-store.subscribe(render);
-render();
+ReactDom.render(
+    <TodoApp />,
+    document.querySelector('#app')
+);
 
 // 下面是test...
 const testAddTodo = () => {
