@@ -1,4 +1,3 @@
-// 做练习
 import React from 'react';
 import ReactDom from 'react-dom';
 import { createStore, combineReducers } from 'redux';
@@ -123,24 +122,18 @@ const Footer = ({visibilityFilter, onClickLink}) => {
             {': '}
             <FilterLink
                 filter="SHOW_ALL"
-                currentFilter={visibilityFilter}
-                onClick = {onClickLink}
             >
                 ALL
             </FilterLink>
             {', '}
             <FilterLink
                 filter="SHOW_ACTIVE"
-                currentFilter={visibilityFilter}
-                onClick = {onClickLink}
             >
                 ACTIVE
             </FilterLink>
             {', '}
             <FilterLink
                 filter="SHOW_COMPLETED"
-                currentFilter={visibilityFilter}
-                onClick = {onClickLink}
             >
                 COMPLETED
             </FilterLink>
@@ -173,32 +166,60 @@ const TodoApp = ({todos, visibilityFilter}) =>{
                 }}
             />
 
-            <Footer
-                visibilityFilter= {visibilityFilter}
-                onClickLink = {(filter) => {
-                    store.dispatch({type: 'SET_VISIBILITY_FILTER', filter});
-                }}
-            />
+            <Footer/>
         </div>
     )
 };
 
 // create filterLink component, todoApp会用到
-const FilterLink = ({filter, children, currentFilter, onClick}) => {
-    if (currentFilter === filter) {
+// 2. 改成class，自己从state中拿到需要的数据
+class FilterLink extends React.Component{
+    componentDidMount() {
+        this.unSubscribe = store.subscribe(() => this.forceUpdate())
+    }
+
+    componentWillUnmount() {
+        this.unSubscribe();
+    }
+
+    render() {
+        const props = this.props;
+        const state = store.getState();
+        return (
+            <Link
+               active = {state.visibilityFilter === props.filter}
+               onClick={()=>{
+                   store.dispatch({
+                       type: 'SET_VISIBILITY_FILTER',
+                       filter: props.filter
+                   });
+               }}
+            >
+                {props.children}
+            </Link>
+        )
+    }
+
+}
+
+// 1. 为了构建中间组件，先把filterLink中的view部分拿出来，做一个 presentational component
+const Link = ({active, children, onClick}) => {
+    if (active) {
         return <span>{children}</span>
     }
     return (
         <a href="#"
            onClick={(e)=>{
                e.preventDefault();
-               onClick(filter);
+               onClick();
            }}
         >
             {children}
         </a>
     )
 };
+
+
 
 // create store
 const store = createStore(rootReducer);
