@@ -576,3 +576,5 @@ ReactDom.render(
 );
 
 ```
+## 显式的connect连接，定义了mapStateToProps 和 mapDispatchToProps。
+
