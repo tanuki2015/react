@@ -102,13 +102,13 @@ const List = ({todos, onListItemClick}) => {
 
 // extract addTodo div-input, button
 
-const Addtodo = () => {
+let Addtodo = ({dispatch}) => {
     let input;
     return (
         <div>
             <input type="text" ref={(node) => {input = node}} />
             <button onClick={()=>{
-                store.dispatch({
+                dispatch({
                     type: 'ADD_TODO',
                     id: todoId++,
                     text: input.value
@@ -118,6 +118,9 @@ const Addtodo = () => {
         </div>
     )
 };
+
+// 用connect替换Addtodo,默认传state和dispatch的情况，直接省略传参，目标模块显式接受就行了
+Addtodo = connect()(Addtodo);
 
 // extract Footer div-p
 const Footer = ({visibilityFilter, onClickLink}) => {
@@ -252,9 +255,13 @@ const store = createStore(rootReducer);
 
 
 ReactDom.render(
-    <TodoApp />,
+    <Provider store={store} >
+        <TodoApp />
+    </Provider>,
     document.querySelector('#app')
 );
+
+
 
 // 下面是test...
 const testAddTodo = () => {

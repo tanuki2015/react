@@ -578,3 +578,25 @@ ReactDom.render(
 ```
 ## 显式的connect连接，定义了mapStateToProps 和 mapDispatchToProps。
 
+## 以匿名函数的方式传递connect参数，如果仅仅需要传递state，dispatch，则参数为null，并混合原组件。
+```
+let Addtodo = () => {
+    let input;
+    return (
+        <div>
+            <input type="text" ref={(node) => {input = node}} />
+            <button onClick={()=>{
+                dispatch({
+                    type: 'ADD_TODO',
+                    id: todoId++,
+                    text: input.value
+                });
+                input.value = '';
+            }}>ADD</button>
+        </div>
+    )
+};
+
+// 用connect混合Addtodo组件,因为仅需要传递state和dispatch方法，所以参数为省略为null
+Addtodo = connect(null,null)(Addtodo);
+```
