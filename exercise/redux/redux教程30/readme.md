@@ -495,6 +495,7 @@ const List = ({todos, onListItemClick}) => {
 2. 中间一层也只是包装一下，传递一下需要的数据给函数，也可以是 presentational components。
 3. 顶层component则是 container component，负责定义行为（函数），而不用呈现view。
 
+### 学了mapStateToProps 和 mapDispatchToProps后，上面的问题就没有了。无需多层传递，直接定向发送，<a href="#mapstateToProps">见后面例子。</a>
 #### 传递函数的命名规范。
 根据观察，命名的规律是这样的：
 最上层以onClickXXX，比如onClickListItem命名，表示这个onClick实在listItem上触发：
@@ -576,6 +577,71 @@ ReactDom.render(
 );
 
 ```
+
+
+<h3 id="mapstateToProps">mapstateToProps的例子</h3>
+1. 先有一个容器VisibleTodoList，他的功能就是接受state，计算state产生数组，定义onClick函数，并传递给子组件Link。
+```
+class VisibleTodoList extends React.Component {
+    componentDidMount() {
+        this.unSubscribe = store.subscribe(() => this.forceUpdate())
+    }
+
+    componentWillUnmount() {
+        this.unSubscribe();
+    }
+    render() {
+        const props = this.props;
+        const state = store.getState();
+        const visibleTodos = getVisibleTodos(state.todos, state.visibilityFilter);
+        return (
+            <List
+                todos={visibleTodos}
+                onListItemClick={id => {
+                    store.dispatch({type: 'TOGGLE_TODO', id});
+                }}
+            />
+        )
+    }
+}
+```
+
+2. 子组件,纯函数，就收props中的todos和onClick回调，执行后返回list
+```
+const List = ({todos, onListItemClick}) => {
+    return (
+        <ul>
+            {todos.map(todo => (
+                <ListItem
+                    {...todo}
+                    key={todo.id}
+                    onClick={() => {onListItemClick(todo.id)}}
+                />
+            ))}
+        </ul>
+    )
+};
+```
+3. 通过mapStateToProps和mapDispatchToProps把List需要的todos数组和onClick传给他就行了，VisibleTodoList不用手写了。
+```
+const mapStateToProps = (state) => {
+    return {
+        todos: getVisibleTodos(state.todos, state.visibilityFilter)
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onListItemClick: id => dispatch({type: 'TOGGLE_TODO', id})
+
+    }
+};
+
+const VisibleTodoList = connect(mapStateToProps, mapDispatchToProps)(List);
+```
+4. 完了,so easy!
+
+
 ## 显式的connect连接，定义了mapStateToProps 和 mapDispatchToProps。
 
 ## 以匿名函数的方式传递connect参数，如果仅仅需要传递state，dispatch，则参数为null，并混合原组件。
@@ -600,3 +666,5 @@ let Addtodo = () => {
 // 用connect混合Addtodo组件,因为仅需要传递state和dispatch方法，所以参数为省略为null
 Addtodo = connect(null,null)(Addtodo);
 ```
+
+
