@@ -101,7 +101,6 @@ const List = ({todos, onListItemClick}) => {
 };
 
 // extract addTodo div-input, button
-
 let Addtodo = ({dispatch}) => {
     let input;
     return (
@@ -200,37 +199,6 @@ const TodoApp = () =>{
     )
 };
 
-// create filterLink component, todoApp会用到
-// 2. 改成class，自己从state中拿到需要的数据
-class FilterLink extends React.Component{
-    componentDidMount() {
-        this.unSubscribe = store.subscribe(() => this.forceUpdate())
-    }
-
-    componentWillUnmount() {
-        this.unSubscribe();
-    }
-
-    render() {
-        const props = this.props;
-        const state = store.getState();
-        return (
-            <Link
-                active = {state.visibilityFilter === props.filter}
-                onClick={()=>{
-                    store.dispatch({
-                        type: 'SET_VISIBILITY_FILTER',
-                        filter: props.filter
-                    });
-                }}
-            >
-                {props.children}
-            </Link>
-        )
-    }
-
-}
-
 // 1. 为了构建中间组件，先把filterLink中的view部分拿出来，做一个 presentational component
 const Link = ({active, children, onClick}) => {
     if (active) {
@@ -247,6 +215,63 @@ const Link = ({active, children, onClick}) => {
         </a>
     )
 };
+
+// create filterLink component, todoApp会用到
+// 2. 改成class，自己从state中拿到需要的数据
+// 最后用connect来改造filterLink。
+// mapStateToLinkProps中第二个参数是表示容器组件自己的props
+// 因为active中对容器的props有依赖，所以通过第二个参数ownProps得到
+const mapStateToLinkProps = (state, ownProps) => {
+    return {
+        active: state.visibilityFilter === ownProps.filter
+    }
+};
+
+
+// 理由同上，因为对ownProps有依赖
+const mapDispatchToLinkProps = (dispatch, ownProps) => {
+    return {
+        onClick: () => {
+            dispatch({
+                type: 'SET_VISIBILITY_FILTER',
+                filter: ownProps.filter
+            })
+        }
+    }
+};
+
+const FilterLink = connect(mapStateToLinkProps,mapDispatchToLinkProps)(Link);
+
+// 下面调用<Link />中的代码都不用了，因为link中有所有的需要被render的内容：
+// active， onClick被注入， props被注入，<Link />组件中 本身有{props.children}这句直接变成{children}
+// class FilterLink extends React.Component{
+//     componentDidMount() {
+//         this.unSubscribe = store.subscribe(() => this.forceUpdate())
+//     }
+//
+//     componentWillUnmount() {
+//         this.unSubscribe();
+//     }
+//
+//     render() {
+//         const props = this.props;
+//         const state = store.getState();
+//         return (
+//             <Link
+//                 active = {state.visibilityFilter === props.filter}
+//                 onClick={()=>{
+//                     store.dispatch({
+//                         type: 'SET_VISIBILITY_FILTER',
+//                         filter: props.filter
+//                     });
+//                 }}
+//             >
+//                 {props.children}
+//             </Link>
+//         )
+//     }
+//
+// }
 
 
 
