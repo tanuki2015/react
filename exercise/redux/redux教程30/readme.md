@@ -644,9 +644,11 @@ const VisibleTodoList = connect(mapStateToProps, mapDispatchToProps)(List);
 
 ## 显式的connect连接，定义了mapStateToProps 和 mapDispatchToProps。
 
-## 以匿名函数的方式传递connect参数，如果仅仅需要传递state，dispatch，则参数为null，并混合原组件。
+## <s>以匿名函数的方式传递connect参数，如果仅仅需要传递state，dispatch，则参数为null，并混合原组件。</s>
+## 上面的理解有错。当state不需要，仅需要注入dispatch的时候，connect的第一个参数可以不写。
+原组件AddTodo改为let定义，其中的内容都不变，仅仅是注入了dispatch
 ```
-let Addtodo = () => {
+let Addtodo = ({dispatch}) => {
     let input;
     return (
         <div>
@@ -663,8 +665,8 @@ let Addtodo = () => {
     )
 };
 
-// 用connect混合Addtodo组件,因为仅需要传递state和dispatch方法，所以参数为省略为null
-Addtodo = connect(null,null)(Addtodo);
+// Addtodo = connect(null,null)(Addtodo);
+Addtodo = connect()(Addtodo);
 ```
 
 

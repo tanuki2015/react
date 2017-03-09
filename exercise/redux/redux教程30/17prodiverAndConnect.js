@@ -119,7 +119,7 @@ let Addtodo = ({dispatch}) => {
     )
 };
 
-// 用connect替换Addtodo,默认传state和dispatch的情况，直接省略传参，目标模块显式接受就行了
+// 用connect替换Addtodo,通过connect默认注入dispatch，直接省略传参，目标模块显式接受就行了
 Addtodo = connect()(Addtodo);
 
 // extract Footer div-p
